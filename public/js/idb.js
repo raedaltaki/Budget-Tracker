@@ -31,7 +31,7 @@ function saveRecord(record)
     depositObject.add(record);
 }
 
-function uploadRecord(record)
+function uploadRecord()
 {
     const transaction = db.transaction(['new_deposit'],'readwrite');
 
@@ -43,9 +43,10 @@ function uploadRecord(record)
     {
         if(getAll.result.length)
         {
-            fetch("/api/transaction", {
+            fetch("/api/transaction", 
+            {
                 method: "POST",
-                body: JSON.stringify(transaction),
+                body: JSON.stringify(getAll.result),
                 headers: {
                   Accept: "application/json, text/plain, */*",
                   "Content-Type": "application/json"

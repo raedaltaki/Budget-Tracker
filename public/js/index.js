@@ -12,7 +12,31 @@ fetch("/api/transaction")
     populateTotal();
     populateTable();
     populateChart();
-  });
+});
+
+Notification.requestPermission()
+  .then((result) => 
+  {
+    if (result === 'granted') 
+    {
+      
+    } else {
+      alert('You denied or dismissed permissions to notifications.');
+    }
+});
+
+function displayNotification(text) 
+{
+    if (window.Notification && Notification.permission === "granted") 
+    {
+        const options = 
+        {
+            body: text,
+            icon: "/icons/icon-152x152.png"
+        };
+        swRegistration.showNotification("PWA Notification!", options);
+    }
+}
 
 function populateTotal() {
   // reduce transaction amounts to a single total value
@@ -85,6 +109,7 @@ function sendTransaction(isAdding) {
 
   // validate form
   if (nameEl.value === "" || amountEl.value === "") {
+    errorEl.style.color = "red";
     errorEl.textContent = "Missing Information";
     return;
   }
@@ -99,9 +124,11 @@ function sendTransaction(isAdding) {
     date: new Date().toISOString()
   };
 
+  let tranType = "Deposit";
   // if subtracting funds, convert amount to negative number
   if (!isAdding) {
     transaction.value *= -1;
+    tranType = "Expense";
   }
 
   // add to beginning of current array of data
@@ -121,11 +148,17 @@ function sendTransaction(isAdding) {
       "Content-Type": "application/json"
     }
   })
-  .then(response => {    
+  .then(response => {
+    displayNotification(tranType +" is added"); 
+    errorEl.textContent =tranType +" is added";
+    errorEl.style.color = "blue";
     return response.json();
   })
-  .then(data => {
+  .then(data => 
+  {
+
     if (data.errors) {
+      errorEl.style.color = "red";
       errorEl.textContent = "Missing Information";
     }
     else {
