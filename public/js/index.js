@@ -14,12 +14,13 @@ fetch("/api/transaction")
     populateChart();
 });
 
+let swRegistration = null;
 Notification.requestPermission()
   .then((result) => 
   {
     if (result === 'granted') 
     {
-      
+      swRegistration = result;
     } else {
       alert('You denied or dismissed permissions to notifications.');
     }
@@ -149,7 +150,7 @@ function sendTransaction(isAdding) {
     }
   })
   .then(response => {
-    displayNotification(tranType +" is added"); 
+    // displayNotification(tranType +" is added"); 
     errorEl.textContent =tranType +" is added";
     errorEl.style.color = "blue";
     return response.json();
