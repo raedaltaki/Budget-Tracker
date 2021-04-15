@@ -150,7 +150,7 @@ function sendTransaction(isAdding) {
     }
   })
   .then(response => {
-    // displayNotification(tranType +" is added"); 
+    displayNotification(tranType +" is added"); 
     errorEl.textContent =tranType +" is added";
     errorEl.style.color = "blue";
     return response.json();
